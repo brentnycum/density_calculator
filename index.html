@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Android Density Calculator</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<link rel="stylesheet" href="style.css" type="text/css" media="screen">
+</head>
+<body>
+	<h1>Android Pixel Density Calculator</h1>
+	<div id="container">
+		<div class="dpi_field">
+			<div class="screen_size">mdpi</div>
+			<div class="percentage">100%</div>
+			<input type="text" name="dpi_mdpi" id="dpi_mdpi" value="20" maxlength="8" data-ppi="mdpi" />
+			<div class="pixels">pixels</div>
+		</div>
+		<div class="dpi_field">
+			<div class="screen_size">hdpi</div>
+			<div class="percentage">150%</div>
+			<input type="text" name="dpi_hdpi" id="dpi_hdpi" value="30" maxlength="8" data-ppi="hdpi" />
+			<div class="pixels">pixels</div>
+		</div>
+		<div class="dpi_field">
+			<div class="screen_size">xhpi</div>
+			<div class="percentage">200%</div>
+			<input type="text" name="dpi_xhdpi" id="dpi_xhdpi" value="40" maxlength="8" data-ppi="xhdpi" />
+			<div class="pixels">pixels</div>
+		</div>
+		<div class="dpi_field">
+			<div class="screen_size">xxhdpi</div>
+			<div class="percentage">300%</div>
+			<input type="text" name="dpi_xxhdpi" id="dpi_xxhdpi" value="60" maxlength="8" data-ppi="xxhdpi" />
+			<div class="pixels">pixels</div>
+		</div>
+		<div class="dpi_field">
+			<div class="screen_size">xxxhdpi</div>
+			<div class="percentage">400%</div>
+			<input type="text" name="dpi_xxxhdpi" id="dpi_xxxhdpi" value="80" maxlength="8" data-ppi="xxxhdpi" />
+			<div class="pixels">pixels</div>
+		</div>
+		<div class="clear_fix"></div>
+		<div id="rounded_options">
+			<label><input type="radio" name="rounded" id="rounded_rounded" value="rounded" checked /> Rounded</label>
+			<label><input type="radio" name="rounded" id="rounded_exact" value="exact"/> Exact</label>
+		</div>
+	</div>
+	<div id="footer">
+		<div id="follow">Created by: Brent Nycum <a href="https://twitter.com/BrentNycum" class="twitter-follow-button" data-show-count="false" data-lang="en">Follow @BrentNycum</a></div>
+		<div id="inspired">Inspired by: <a href="http://www.teehanlax.com/blog/density-converter/">Teehan+Lax</a></div>
+		<div id="share"><a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a></div>
+	</div>
+	
+	<script type="text/javascript">
+	
+	var focusedInput;
+	var screenDpis = {
+		"mdpi": 1,
+		"hdpi": 1.5,
+		"xhdpi": 2,
+		"xxhdpi": 3,
+		"xxxhdpi": 4
+	};
+	
+	function scale(val, scale, rounded) {
+		var scaledVal = val * scale;
+		
+		if (rounded) {
+			return Math.abs(scaledVal - Math.floor(scaledVal)) === 0.5 && Math.floor(scaledVal) % 2 === 0 ? Math.round(scaledVal) - 1 : Math.round(scaledVal);
+		}
+		
+		return scaledVal.toFixed(1);
+	}
+	
+	function recalculate() {
+		var dpi = screenDpis[focusedInput.attr("data-ppi")];
+		var val = focusedInput.val();
+		
+		var scaled = val / dpi;
+		
+		var rounded = $("input[type='radio']:checked").val() === "rounded";
+		
+		$("#dpi_mdpi").not(":focus").val(scale(scaled, screenDpis["mdpi"], rounded));
+		$("#dpi_hdpi").not(":focus").val(scale(scaled, screenDpis["hdpi"], rounded));
+		$("#dpi_xhdpi").not(":focus").val(scale(scaled, screenDpis["xhdpi"], rounded));
+		$("#dpi_xxhdpi").not(":focus").val(scale(scaled, screenDpis["xxhdpi"], rounded));
+		$("#dpi_xxxhdpi").not(":focus").val(scale(scaled, screenDpis["xxxhdpi"], rounded));
+	}
+	
+	$(document).ready(function() {
+		$("input:text").keyup(function(e) {
+			e.preventDefault();
+			
+			focusedInput = $(this);
+			
+			recalculate();
+		});
+		
+		$("input:radio").change(function(e) {
+			e.preventDefault();
+			
+			recalculate();
+			
+			focusedInput.focus();
+			focusedInput.select();
+		});
+	});
+	
+	!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+	
+	</script>
+	
+</body>
+</html>
